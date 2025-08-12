@@ -1,0 +1,1056 @@
+/* ======================== BASE & BACKGROUND ======================== */
+body {
+    margin: 0;
+    min-height: 100vh;
+    user-select: none;
+    /* Added to ensure background covers everything */
+    background-color: #0f0f1a;
+    overflow: hidden; /* Prevent body scrollbars if page content overflows slightly */
+    font-family: sans-serif; /* Add a default font */
+}
+
+#tech-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+    z-index: -1;
+    overflow: hidden;
+}
+
+#tech-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(0, 255, 200, 0.1) 0%, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(100, 0, 255, 0.1) 0%, transparent 30%);
+    animation: pulse 8s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 0.7;
+    }
+}
+
+#tech-background::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(90deg, rgba(0, 255, 200, 0.05) 1px, transparent 1px),
+        linear-gradient(rgba(0, 255, 200, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 40px 40px;
+    }
+}
+
+/* ======================== MAIN MENU ======================== */
+#main-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Ensure it's above background but below pages */
+}
+
+#menu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+#game-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 72px;
+    color: #00ffc8;
+    text-shadow: 0 0 10px #00ffc8, 0 0 20px #00ffc8;
+    margin: 0;
+    animation: titleGlow 2s infinite alternate;
+}
+
+@keyframes titleGlow {
+    0% {
+        text-shadow: 0 0 10px #00ffc8, 0 0 20px #00ffc8;
+    }
+
+    100% {
+        text-shadow: 0 0 15px #00ffc8, 0 0 30px #00ffc8, 0 0 45px #00ffc8;
+    }
+}
+
+#main-start-btn {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 24px;
+    padding: 15px 40px;
+    background: none;
+    color: #00ffc8;
+    border: 2px solid #00ffc8;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+#main-start-btn:hover {
+    background: rgba(0, 255, 200, 0.1);
+    box-shadow: 0 0 15px #00ffc8;
+}
+
+#main-start-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 200, 0.4), transparent);
+    transition: all 0.5s ease;
+}
+
+#main-start-btn:hover::before {
+    left: 100%;
+}
+
+/* ======================== GENERIC PAGE STYLING ======================== */
+.page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 15, 30, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    z-index: 2000; /* Ensure pages are above main menu and game container */
+    display: none; /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.page.active {
+    display: flex; /* Use flex for content alignment */
+    opacity: 1;
+}
+
+.page-content {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto; /* Top/bottom margin */
+    padding: 20px; /* Padding inside content area */
+    height: calc(100vh - 120px); /* Fixed height: Viewport minus margins and title space */
+    overflow: hidden; /* CRITICAL: Keep this to prevent scrolling of the page-content itself */
+    display: flex;
+    flex-direction: column; /* Stack title and content vertically */
+    color: white; /* Default text color */
+}
+
+.page-title {
+    font-family: 'Orbitron', sans-serif;
+    color: #00ffc8;
+    text-align: center;
+    margin-bottom: 20px; /* Space below title */
+    font-size: 36px;
+    text-shadow: 0 0 10px #00ffc8;
+    flex-shrink: 0; /* Prevent title from shrinking */
+}
+
+/* ======================== SONG SELECTION PAGE (with Images) ======================== */
+#song-selection .page-content {
+    /* Song selection might need scrolling if list is long */
+    overflow-y: auto; /* Allow vertical scroll specifically for song list */
+     padding-right: 5px; /* Adjust padding slightly if scrollbar overlaps */
+}
+
+.song-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Adjust card min width */
+    gap: 20px; /* Gap between cards */
+    padding-right: 10px; /* Space for scrollbar */
+    margin-right: -10px; /* Offset padding */
+    flex-grow: 1; /* Allow grid to fill space if page-content scrolls */
+}
+
+.song-card {
+    background: rgba(30, 35, 50, 0.8); /* Fallback background */
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 255, 200, 0.2);
+    position: relative; /* Needed for overlay and ::before */
+    overflow: hidden;
+    height: 150px; /* Fixed height for consistency, adjust as needed */
+    /* aspect-ratio: 16 / 9; */ /* Alternative: use aspect ratio */
+
+    /* Background image styles */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Card overlay for text readability */
+.song-card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.65) 60%, transparent 100%);
+    padding: 10px 15px;
+    box-sizing: border-box;
+    transition: background 0.3s ease;
+}
+
+.song-card:hover .song-card-overlay {
+     background: linear-gradient(to top, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.75) 60%, transparent 100%);
+}
+
+/* Ensure overlay text is visible and styled */
+.song-card-overlay .song-title,
+.song-card-overlay .song-artist,
+.song-card-overlay .song-difficulty {
+    position: relative; /* Ensure text is above gradient */
+    z-index: 1;
+}
+
+.song-card-overlay .song-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    margin-bottom: 4px; /* Reduced margin */
+    color: #fff; /* White text */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8); /* Text shadow for contrast */
+}
+
+.song-card-overlay .song-artist {
+    font-size: 13px;
+    color: #ccc; /* Lighter grey */
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+.song-card-overlay .song-difficulty {
+    display: flex;
+    gap: 5px;
+}
+
+.song-card-overlay .difficulty-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #888; /* Dimmed dot */
+    opacity: 0.8;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+/* .song-card-overlay .difficulty-dot.active {
+    background: #00ffc8; /* Active dot color */
+    opacity: 1;
+    box-shadow: 0 0 4px #00ffc8; /* Add glow to active dots */
+} */
+
+/* Hover effect for the card itself */
+.song-card:hover {
+    transform: translateY(-5px) scale(1.02); /* Slightly lift and scale */
+    box-shadow: 0 12px 25px rgba(0, 255, 200, 0.25);
+    border-color: rgba(0, 255, 200, 0.6);
+}
+
+/* Shimmer effect on hover */
+.song-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 200, 0.15), transparent);
+    transition: all 0.6s ease;
+    z-index: 2; /* Above overlay */
+    pointer-events: none;
+}
+
+.song-card:hover::before {
+    left: 100%;
+}
+
+
+/* ======================== SETTINGS PAGE ======================== */
+.settings-scroll-container {
+    overflow-y: auto; /* Enable vertical scrolling */
+    flex-grow: 1; /* Allow container to fill remaining space */
+    padding-right: 10px; /* Space for scrollbar */
+    margin-right: -10px; /* Offset padding */
+    /* Add some bottom padding inside the scroll area */
+    padding-bottom: 20px;
+}
+
+.settings-container {
+    max-width: 800px;
+    margin: 0 auto; /* Centered */
+    padding: 20px;
+    background: rgba(20, 25, 40, 0.8);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 200, 0.2);
+}
+
+.setting-item {
+    margin-bottom: 18px; /* Reduced margin */
+    padding-bottom: 12px; /* Reduced padding */
+    border-bottom: 1px solid rgba(0, 255, 200, 0.1); /* Add subtle separator */
+}
+.setting-item:last-child {
+    border-bottom: none; /* Remove border for last item */
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.setting-title {
+    font-family: 'Orbitron', sans-serif;
+    color: #00ffc8;
+    margin-bottom: 12px; /* Reduced margin */
+    font-size: 17px; /* Slightly larger */
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #ccc; /* Icon color */
+}
+
+.slider {
+    flex-grow: 1;
+    appearance: none;
+    -webkit-appearance: none;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00ffc8;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 255, 200, 0.5);
+    transition: background 0.2s ease;
+}
+.slider:hover::-webkit-slider-thumb {
+    background: #33ffd6; /* Lighter color on hover */
+}
+
+#speed-value {
+    font-family: 'Orbitron', sans-serif;
+    color: #00ffc8;
+    min-width: 20px; /* Ensure space for value */
+    text-align: right;
+}
+
+.key-bindings {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Default 2 columns */
+    gap: 12px; /* Adjusted gap */
+}
+
+@media (max-width: 768px) {
+    .key-bindings {
+        grid-template-columns: 1fr; /* Single column on smaller screens */
+    }
+}
+
+.key-binding {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px; /* Adjusted padding */
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 200, 0.2);
+    font-size: 14px;
+}
+
+.key-input {
+    padding: 6px 12px; /* Adjusted padding */
+    background: rgba(0, 255, 200, 0.1);
+    border-radius: 5px;
+    border: 1px solid rgba(0, 255, 200, 0.3);
+    min-width: 35px; /* Ensure space */
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #fff; /* Key text color */
+}
+
+.key-input:hover {
+    background: rgba(0, 255, 200, 0.25);
+    border-color: rgba(0, 255, 200, 0.5);
+}
+
+.key-input.active {
+    background: #00ffc8; /* Highlight color when active */
+    color: #111; /* Dark text on highlight */
+    box-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
+}
+
+.toggle-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Adjusted gap */
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toggle-switch input {
+    display: none;
+}
+
+.slider-toggle {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Add subtle border */
+}
+
+.slider-toggle:before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 2px;
+    bottom: 1px; /* Adjust position slightly */
+    background-color: #888; /* Dimmed color */
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+input:checked+.slider-toggle {
+    background-color: rgba(0, 255, 200, 0.3);
+    border-color: rgba(0, 255, 200, 0.5);
+}
+
+input:checked+.slider-toggle:before {
+    transform: translateX(26px);
+    background-color: #00ffc8;
+}
+
+.setting-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 15px; /* Add padding above buttons */
+    border-top: 1px solid rgba(0, 255, 200, 0.1); /* Separator above buttons */
+}
+
+.settings-btn {
+    padding: 10px 22px; /* Adjusted padding */
+    background: rgba(0, 255, 200, 0.1);
+    border: 1px solid rgba(0, 255, 200, 0.3);
+    border-radius: 5px;
+    color: #00ffc8;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    text-transform: uppercase; /* Make buttons uppercase */
+    letter-spacing: 1px;
+}
+
+.settings-btn:hover {
+    background: rgba(0, 255, 200, 0.2);
+    border-color: rgba(0, 255, 200, 0.6);
+    box-shadow: 0 0 8px rgba(0, 255, 200, 0.3);
+}
+
+.settings-btn.primary {
+    background: #00ffc8;
+    color: #111; /* Dark text on primary */
+    border-color: #00ffc8;
+}
+
+.settings-btn.primary:hover {
+    background: #33ffd6;
+    box-shadow: 0 0 12px rgba(0, 255, 200, 0.5);
+}
+
+
+/* ======================== NAVBAR ======================== */
+#navbar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 9999; /* Highest z-index */
+    transition: all 0.3s ease;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: rgba(20, 20, 30, 0.7); /* Slightly more opaque */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    width: 50px; /* Collapsed width */
+    height: 50px;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+}
+
+.nav-btn:hover {
+    width: 180px; /* Expanded width */
+    background: rgba(40, 40, 60, 0.9);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 255, 200, 0.3); /* Highlight border on hover */
+}
+
+.nav-icon {
+    min-width: 24px;
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e0e0e0; /* Slightly off-white icons */
+    font-size: 24px;
+    transition: color 0.3s ease;
+}
+.nav-btn:hover .nav-icon {
+    color: #00ffc8; /* Highlight icon color */
+}
+
+.nav-text {
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    margin-left: 15px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease 0.1s; /* Slight delay on text appear */
+}
+
+.nav-btn:hover .nav-text {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.nav-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #00ffff, #00ffc8);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease; /* Slightly slower indicator */
+}
+
+.nav-btn:hover .nav-indicator {
+    transform: scaleX(1);
+}
+
+/* Active state for button click */
+.nav-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 15px 2px #00ffc8; /* Use theme color */
+}
+
+/* ======================== RIPPLE EFFECT ======================== */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background: rgba(0, 255, 200, 0.5); /* Use theme color */
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* ======================== GAME CONTAINER & VIDEO ======================== */
+#game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #111; /* Darker fallback */
+    z-index: 1000; /* Below pages, above background */
+    display: none; /* Hidden initially */
+}
+
+#game-container>video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1; /* Ensure video is behind tracks */
+    filter: brightness(0.7); /* Optional: dim video slightly */
+}
+
+/* ======================== TRACKS ======================== */
+#track-container {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 50%; /* Adjust as needed */
+    height: calc(174% + 0px); /* Keep perspective height */
+    perspective: 400px;
+    z-index: 10; /* Above video */
+}
+
+.track {
+    position: absolute;
+    height: 100%;
+    transform-origin: center bottom;
+    transform: rotateX(40deg);
+    box-sizing: border-box;
+    overflow: hidden;
+
+    background: linear-gradient(to top,
+            rgba(25, 35, 45, 0.95) 0%, /* More opaque at bottom */
+            rgba(15, 25, 35, 0.8) 30%,
+            rgba(10, 15, 25, 0.6) 60%,
+            rgba(5, 10, 15, 0.4) 85%,
+            rgba(0, 0, 5, 0.1) 100%);
+
+    border-left: 1px solid rgba(80, 200, 255, 0.25); /* Slightly stronger border */
+    box-shadow:
+        inset 0 0 15px rgba(80, 200, 255, 0.2), /* Stronger inset shadow */
+        0 0 8px rgba(0, 0, 0, 0.5); /* Darker outer shadow */
+    transition: background 0.1s linear, box-shadow 0.1s linear; /* Smooth transition for active state */
+}
+
+.track:last-child {
+    border-right: 1px solid rgba(80, 200, 255, 0.25);
+}
+
+/* Active track state */
+.track.active {
+    background: linear-gradient(to top,
+            rgba(60, 100, 120, 1) 0%,
+            rgba(40, 80, 100, 0.85) 30%,
+            rgba(30, 60, 80, 0.7) 60%,
+            rgba(20, 40, 60, 0.5) 85%,
+            rgba(10, 20, 40, 0.2) 100%);
+
+    box-shadow:
+        inset 0 0 30px rgba(100, 220, 255, 0.5), /* Stronger inset glow */
+        0 0 20px rgba(100, 220, 255, 0.3); /* Outer glow */
+}
+
+/* Track positioning */
+#track-1 { left: 0%; width: 25%; }
+#track-2 { left: 25%; width: 25%; }
+#track-3 { left: 50%; width: 25%; }
+#track-4 { left: 75%; width: 25%; }
+
+/* ======================== HIT BOX ======================== */
+.hit-box {
+    position: absolute;
+    bottom: 40px; /* Position from track bottom */
+    width: 100%;
+    height: 24px;
+    background: rgba(0, 180, 255, 0.2); /* Slightly adjusted color */
+    box-sizing: border-box;
+    border-top: 1px solid rgba(0, 255, 255, 0.7); /* Stronger border */
+    border-bottom: 1px solid rgba(0, 255, 255, 0.7);
+    box-shadow:
+        inset 0 0 12px rgba(0, 220, 255, 0.4), /* Stronger inset glow */
+        0 0 25px rgba(0, 180, 255, 0.3); /* Wider outer glow */
+    transform-style: preserve-3d;
+    z-index: 100; /* Above notes */
+}
+
+/* ======================== HIT EFFECT (on Hit Box) ======================== */
+.hit-effect { /* Applied to .hit-box via JS */
+    animation: hitEffect 0.15s ease-out; /* Faster animation */
+}
+
+@keyframes hitEffect {
+    0% { background-color: rgba(0, 255, 255, 0.3); transform: scaleY(1); }
+    50% { background-color: rgba(0, 255, 255, 0.6); transform: scaleY(1.1); } /* Brighter and slightly taller */
+    100% { background-color: rgba(0, 255, 255, 0.3); transform: scaleY(1); }
+}
+
+/* ======================== NOTES ======================== */
+.note {
+    position: absolute;
+    width: 85%; /* Slightly wider notes */
+    height: 20px;
+    left: 7.5%; /* Center note */
+    border-radius: 2px; /* Slightly more rounded */
+    border-top: 1px solid rgba(255, 255, 255, 0.9);
+    border-bottom: 1px solid rgba(0, 50, 80, 0.8);
+    border-radius: 10px;
+    /* background: set by JS per track */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.8); /* Adjusted shadow */
+    will-change: transform;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50; /* Below hit box */
+}
+
+/* Note indicator line */
+.note::after {
+    content: "";
+    position: absolute;
+    width: 65%; /* Slightly wider line */
+    height: 3px; /* Thicker line */
+    background: rgba(0, 0, 0, 0.7); /* Darker line */
+    border-radius: 1px;
+    opacity: 0.8;
+}
+
+/* ======================== IN-GAME UI (Judgement, Combo, Score) ======================== */
+#judgement-display {
+    position: absolute;
+    bottom: 220px; /* Slightly higher position */
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 28px; /* Larger font */
+    font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
+    color: white;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 110; /* Above hit box */
+    transition: opacity 0.3s linear; /* Fade out */
+}
+
+#judgement-display.animated {
+    animation: judgement-display-animation 0.12s linear forwards; /* Slightly longer animation */
+}
+
+@keyframes judgement-display-animation {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.35); opacity: 1; } /* Slightly larger scale */
+}
+
+/* Judgement colors */
+#judgement-display.perfect { color: #00ffc8; text-shadow: 0 0 20px #00ffc8, 0 0 40px #00ffc8, 0 0 5px #fff; }
+#judgement-display.great   { color: #aaff00; text-shadow: 0 0 20px #aaff00, 0 0 40px #aaff00, 0 0 5px #fff; }
+#judgement-display.good    { color: #ffcc00; text-shadow: 0 0 20px #ffcc00, 0 0 40px #ffcc00, 0 0 5px #fff; }
+#judgement-display.miss    { color: #ff0033; text-shadow: 0 0 20px #ff0033, 0 0 40px #ff0033, 0 0 5px #fff; }
+
+/* Combo display */
+#combo-container {
+    position: absolute;
+    top: 18%; /* Position slightly lower */
+    left: 50%;
+    transform: translateX(-50%);
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 10px 16px;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    z-index: 120;
+    opacity: 0;
+    transition: opacity 0.1s linear;
+}
+
+#combo-label {
+    font-size: 22px; /* Slightly smaller label */
+    font-weight: bold;
+    color: #ffeb3b;
+    text-shadow: 0 0 8px #ffeb3b; /* Stronger shadow */
+    margin-bottom: 2px; /* Reduced margin */
+}
+
+#combo {
+    font-size: 78px; /* Larger combo number */
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7); /* Stronger shadow */
+}
+
+#combo.animated {
+    animation: combo-animation 0.1s linear;
+}
+
+@keyframes combo-animation {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); } /* Larger pop */
+}
+
+/* Score and Accuracy display */
+#game-state-container {
+    position: absolute;
+    bottom: 35px; /* Adjust position */
+    left: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px; /* Slightly more gap */
+    z-index: 120;
+    font-family: 'Orbitron', sans-serif;
+    background: none;
+    border: none;
+    box-shadow: none;
+    text-align: start;
+    min-width: 120px; /* Slightly wider */
+    transition: transform 0.2s ease;
+}
+
+#accuracy {
+    font-size: 26px; /* Larger */
+    font-weight: bold;
+    color: #fff;
+}
+
+#score {
+    font-size: 52px; /* Larger */
+    font-weight: bold;
+    color: #fff;
+}
+
+#accuracy,
+#score {
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8); /* Stronger shadow */
+}
+
+/* ======================== Results Page (Layout Adjusted - Kept Compact) ======================== */
+#results-page {
+    /* Uses .page and .page-content styles */
+    /* .page-content MUST keep overflow: hidden and height: calc(100vh - 120px) */
+}
+
+/* Adjust content within the fixed height */
+#results-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* Limit width */
+    margin: 0 auto; /* Removed top/bottom margin to save space */
+    background: rgba(20, 25, 40, 0.9); /* Slightly more opaque */
+    border-radius: 15px;
+    padding: 15px 20px; /* Reduced padding */
+    border: 1px solid rgba(0, 255, 200, 0.25); /* Slightly stronger border */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+    color: #eee;
+    flex-grow: 1; /* Allow it to take space, but constrained by .page-content */
+    overflow: hidden; /* Ensure it doesn't overflow its own box */
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Keep 2 columns */
+    gap: 10px 18px; /* Adjusted gap */
+    width: 100%;
+    margin-bottom: 18px; /* Adjusted margin */
+}
+
+.result-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 8px; /* Adjusted padding */
+    background: rgba(0, 0, 0, 0.25); /* Slightly darker items */
+    border-radius: 8px; /* Slightly larger radius */
+    border: 1px solid rgba(255,255,255,0.05); /* Subtle border for items */
+}
+
+.result-label {
+    font-size: 12px; /* Keep small label size */
+    color: #bbb; /* Slightly brighter label */
+    margin-bottom: 3px; /* Adjusted margin */
+    text-transform: uppercase;
+    letter-spacing: 1px; /* More spacing */
+    font-weight: 500; /* Medium weight */
+}
+
+.result-value {
+    font-size: 20px; /* Adjusted base font size */
+    font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    line-height: 1.2; /* Adjust line height */
+}
+
+/* Specific styling for key results (adjust sizes) */
+.result-item .score {
+    font-size: 28px; /* Adjusted font size */
+    color: #00ffc8;
+    text-shadow: 0 0 10px #00ffc8;
+}
+
+.result-item .accuracy {
+    color: #ffeb3b;
+}
+
+.result-item .combo {
+    color: #f0f; /* Magenta */
+}
+
+/* Judgement colors (no size changes needed here) */
+.result-item.judgement.perfect .result-value { color: #00ffc8; }
+.result-item.judgement.great .result-value { color: #aaff00; }
+.result-item.judgement.good .result-value { color: #ffcc00; }
+.result-item.judgement.miss .result-value { color: #ff0033; }
+
+/* Grade Styling (adjust size) */
+.result-item.grade .result-value {
+    font-size: 40px; /* Adjusted font size */
+    color: #00ffc8;
+    text-shadow: 0 0 15px #00ffc8;
+    line-height: 1.1; /* Tighter line height for large text */
+}
+
+.result-item.grade {
+    grid-column: span 2; /* Keep spanning 2 columns */
+    padding: 10px 0; /* Adjust padding */
+    background: rgba(0,0,0,0.3); /* Slightly different background for grade */
+}
+
+/* Grade colors */
+.result-item.grade .result-value.grade-s { color: gold; text-shadow: 0 0 15px gold, 0 0 5px gold; }
+.result-item.grade .result-value.grade-a { color: #00ffc8; text-shadow: 0 0 15px #00ffc8; }
+.result-item.grade .result-value.grade-b { color: #2196F3; text-shadow: 0 0 15px #2196F3; }
+.result-item.grade .result-value.grade-c { color: #ff9800; text-shadow: 0 0 15px #ff9800; }
+.result-item.grade .result-value.grade-f { color: #ff0033; text-shadow: 0 0 15px #ff0033; }
+
+/* Actions section */
+.results-actions {
+    display: flex;
+    justify-content: center;
+    gap: 18px; /* Adjusted gap */
+    width: 100%;
+    margin-top: 18px; /* Adjusted margin */
+    flex-shrink: 0;
+    padding-top: 15px; /* Add padding above buttons */
+    border-top: 1px solid rgba(0, 255, 200, 0.15); /* Separator */
+}
+
+.results-btn {
+    padding: 10px 25px; /* Adjusted padding */
+    background: rgba(0, 255, 200, 0.1);
+    border: 1px solid rgba(0, 255, 200, 0.4); /* Stronger border */
+    border-radius: 6px; /* Slightly larger radius */
+    color: #00ffc8;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px; /* Adjusted font size */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.results-btn:hover {
+    background: rgba(0, 255, 200, 0.25);
+    border-color: rgba(0, 255, 200, 0.7);
+    box-shadow: 0 0 10px rgba(0, 255, 200, 0.4);
+}
+
+.results-btn.primary {
+     background: #00ffc8;
+    color: #111;
+    border-color: #00ffc8;
+}
+
+.results-btn.primary:hover {
+     background: #33ffd6;
+    box-shadow: 0 0 12px rgba(0, 255, 200, 0.6);
+}
+
+/* Responsive adjustments for Results Page */
+@media (max-width: 600px) {
+    #results-content {
+        padding: 10px 15px;
+        max-width: 95%; /* Allow slightly wider content on small screens */
+    }
+    .results-grid {
+        grid-template-columns: 1fr; /* Single column */
+        gap: 8px; /* Reduced gap */
+        margin-bottom: 12px;
+    }
+     .result-item {
+        padding: 6px;
+    }
+    .result-item.grade {
+        grid-column: span 1;
+        padding: 8px 0;
+    }
+    .results-actions {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 12px;
+         padding-top: 12px;
+    }
+     .results-btn {
+        width: 100%;
+        padding: 12px; /* Adjust padding for full width */
+        font-size: 14px;
+    }
+    .result-value { font-size: 18px; } /* Adjust sizes for single column */
+    .result-item .score { font-size: 24px; }
+    .result-item.grade .result-value { font-size: 34px; }
+}
+
+/* ======================== Results Page End ======================== */

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <div id="main-menu">
+        <div id="tech-background"></div>
+        <div id="menu-content">
+            <h1 id="game-title">NeonBeat</h1>
+            <button id="main-start-btn">Start Game</button>
+        </div>
+    </div>
+
+    <div id="song-selection" class="page">
+        <div class="page-content">
+            <h2 class="page-title">歌曲清單</h2>
+            <div class="song-list">
+                <!-- Songs will be added dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- navbar結構 -->
+    <div id="navbar">
+        <div class="nav-btn" id="home-btn">
+            <div class="nav-icon">
+                <span class="material-icons">home</span>
+            </div>
+            <span class="nav-text">首頁</span>
+            <div class="nav-indicator"></div>
+        </div>
+        <div class="nav-btn" id="songlist-btn">
+            <div class="nav-icon">
+                <span class="material-icons">queue_music</span>
+            </div>
+            <span class="nav-text">歌曲清單</span>
+            <div class="nav-indicator"></div>
+        </div>
+        <div class="nav-btn" id="setting-btn">
+            <div class="nav-icon">
+                <span class="material-icons">settings</span>
+            </div>
+            <span class="nav-text">設置</span>
+            <div class="nav-indicator"></div>
+        </div>
+    </div>
+
+    <!-- navbar結構 -->
+
+    <div id="settings" class="page">
+        <div class="page-content">
+            <h2 class="page-title">遊戲設置</h2>
+            <div class="settings-scroll-container">
+                <div class="settings-container">
+                    <!-- 音量控制 -->
+                    <div class="setting-item">
+                        <h3 class="setting-title">音量控制</h3>
+                        <div class="slider-container">
+                            <span class="material-icons">volume_down</span>
+                            <input type="range" id="volume-slider" min="0" max="100" value="50" class="slider">
+                            <span class="material-icons">volume_up</span>
+                        </div>
+                    </div>
+
+                    <!-- 按鍵設置 -->
+                    <div class="setting-item">
+                        <h3 class="setting-title">按鍵設置</h3>
+                        <div class="key-bindings">
+                            <div class="key-binding">
+                                <span>軌道 1 (左)</span>
+                                <div class="key-input" data-track="0">D</div>
+                            </div>
+                            <div class="key-binding">
+                                <span>軌道 2</span>
+                                <div class="key-input" data-track="1">F</div>
+                            </div>
+                            <div class="key-binding">
+                                <span>軌道 3</span>
+                                <div class="key-input" data-track="2">J</div>
+                            </div>
+                            <div class="key-binding">
+                                <span>軌道 4 (右)</span>
+                                <div class="key-input" data-track="3">K</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 音符速度 -->
+                    <div class="setting-item">
+                        <h3 class="setting-title">音符速度</h3>
+                        <div class="slider-container">
+                            <span class="material-icons">speed</span>
+                            <input type="range" id="speed-slider" min="1" max="10" value="4" class="slider">
+                            <span id="speed-value">4</span>
+                        </div>
+                    </div>
+
+                    <!-- 視覺效果 -->
+                    <div class="setting-item">
+                        <h3 class="setting-title">視覺效果</h3>
+                        <div class="toggle-container">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="hit-effects-toggle" checked>
+                                <span class="slider-toggle"></span>
+                                <span>擊中效果</span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="judgement-toggle" checked>
+                                <span class="slider-toggle"></span>
+                                <span>判定顯示</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 重置按鈕 -->
+                    <div class="setting-actions">
+                        <button id="reset-settings" class="settings-btn">恢復默認設置</button>
+                        <button id="save-settings" class="settings-btn primary">保存設置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-container">
+        <video id="game-video" src="./video/idol.mp4"></video>
+        <div id="judgement-display"></div>
+        <div id="combo-container">
+            <div id="combo-label">COMBO</div>
+            <div id="combo">0</div>
+        </div>
+        <div id="game-state-container">
+            <span id="accuracy">0.00%</span>
+            <span id="score">0</span>
+        </div>
+        <div id="track-container">
+            <div class="track" id="track-1">
+                <div class="hit-box"></div>
+            </div>
+            <div class="track" id="track-2">
+                <div class="hit-box"></div>
+            </div>
+            <div class="track" id="track-3">
+                <div class="hit-box"></div>
+            </div>
+            <div class="track" id="track-4">
+                <div class="hit-box"></div>
+            </div>
+        </div>
+    </div>
+    <div id="results-page" class="page">
+        <div class="page-content">
+            <h2 class="page-title">遊戲結果</h2>
+            <div class="results-scroll-container">
+                <div id="results-content">
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <span class="result-label">歌曲</span>
+                            <span class="result-value" id="results-song-title">--</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">分數</span>
+                            <span class="result-value score" id="results-score">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">準確率</span>
+                            <span class="result-value accuracy" id="results-accuracy">0.00%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">最大連擊</span>
+                            <span class="result-value combo" id="results-max-combo">0</span>
+                        </div>
+                        <div class="result-item judgement perfect">
+                            <span class="result-label">Perfect</span>
+                            <span class="result-value" id="results-perfect">0</span>
+                        </div>
+                        <div class="result-item judgement great">
+                            <span class="result-label">Great</span>
+                            <span class="result-value" id="results-great">0</span>
+                        </div>
+                        <div class="result-item judgement good">
+                            <span class="result-label">Good</span>
+                            <span class="result-value" id="results-good">0</span>
+                        </div>
+                        <div class="result-item judgement miss">
+                            <span class="result-label">Miss</span>
+                            <span class="result-value" id="results-miss">0</span>
+                        </div>
+                        <div class="result-item grade">
+                            <span class="result-label">評級</span>
+                            <span class="result-value" id="results-grade">--</span>
+                        </div>
+                    </div>
+                    <div class="results-actions">
+                        <button id="retry-btn" class="results-btn">再試一次</button>
+                        <button id="results-back-btn" class="results-btn primary">返回選歌</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
